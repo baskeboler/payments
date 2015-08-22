@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:int="http://www.springframework.org/schema/integration/file"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/integration
+                  http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+<int:inbound-channel-adapter directory="/tmp" id="filereader" filename-pattern="accountService.txt" channel="channel1" />
+    <int:file-to-string-transformer input-channel="channel1" output-channel="channel2" />
+    <channel id="channel1" />
+    <splitter input-channel="channel2" output-channel="nullChannel" />
+    <channel id="channel2" />
+</beans:beans>

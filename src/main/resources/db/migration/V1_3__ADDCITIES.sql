@@ -1,0 +1,13 @@
+INSERT INTO city(id, name, country_id) VALUES (13, 'Buenos Aires', 6);
+INSERT INTO city(id, name, country_id) VALUES (1, 'Rosario', 6);
+INSERT INTO city(id, name, country_id) VALUES (2, 'Albaniaworld', 1);
+INSERT INTO city(id, name, country_id) VALUES (3, 'Sao Paulo', 2);
+INSERT INTO city(id, name, country_id) VALUES (4, 'Rio de Janeiro', 2);
+INSERT INTO city(id, name, country_id) VALUES (5, 'Porto Alegre', 2);
+INSERT INTO city(id, name, country_id) VALUES (6, 'Montevideo', 3);
+INSERT INTO city(id, name, country_id) VALUES (7, 'Punta del Este', 3);
+INSERT INTO city(id, name, country_id) VALUES (8, 'Chicago', 4);
+INSERT INTO city(id, name, country_id) VALUES (9, 'LA', 4);
+INSERT INTO city(id, name, country_id) VALUES (10, 'NY', 4);
+INSERT INTO city(id, name, country_id) VALUES (11, 'Madrid', 5);
+INSERT INTO city(id, name, country_id) VALUES (12, 'Vigo', 5);
