@@ -13,20 +13,20 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
  */
 public class WithdrawalForm extends AbstractForm<WithdrawalTransaction> {
 
-    private TextField amount = new MTextField("Amount");
+    private final TextField amount = new MTextField("Amount");
+
+    public WithdrawalForm(WithdrawalTransaction t) {
+        this.setSizeUndefined();
+        this.setEntity(t);
+    }
 
     @Override
     protected Component createContent() {
         return new MVerticalLayout(
                 new MFormLayout(
-                        amount
+                        this.amount
                 ).withWidth(""),
-                getToolbar()
+                this.getToolbar()
         ).withWidth("");
-    }
-
-    public WithdrawalForm(WithdrawalTransaction t) {
-        setSizeUndefined();
-        setEntity(t);
     }
 }

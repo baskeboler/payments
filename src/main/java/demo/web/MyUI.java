@@ -8,7 +8,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.UI;
 import demo.web.views.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MVerticalLayout;
@@ -18,7 +18,7 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
  */
 @Theme("valo")
 @SpringUI()
-public class MyUI extends com.vaadin.ui.UI {
+public class MyUI extends UI {
     @Autowired
     private SpringViewProvider viewProvider;
 
@@ -32,10 +32,10 @@ public class MyUI extends com.vaadin.ui.UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final MVerticalLayout root = new MVerticalLayout().withFullHeight();
+        MVerticalLayout root = new MVerticalLayout().withFullHeight();
         //root.setSizeFull();
 
-        final Panel viewContainer = new Panel();
+        Panel viewContainer = new Panel();
         //viewContainer.setSizeFull();
         //root.setExpandRatio(viewContainer, 1.0f);
 
@@ -56,7 +56,7 @@ public class MyUI extends com.vaadin.ui.UI {
         menuBar.addItem(
                 "Banks",
                 FontAwesome.BANK,
-                selectedItem ->  navigator.navigateTo(BanksView.VIEW_NAME)
+                selectedItem -> navigator.navigateTo(BanksView.VIEW_NAME)
         );
         menuBar.addItem(
                 "Accounts",

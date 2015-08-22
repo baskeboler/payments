@@ -9,6 +9,11 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Notification;
+import demo.jpa.entities.Image;
+import demo.jpa.repositories.ImageRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.easyuploads.UploadField;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MVerticalLayout;
@@ -16,7 +21,6 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
 
 /**
  * Created by victor on 8/20/15.
@@ -24,10 +28,13 @@ import java.io.InputStream;
 @SpringView(name = MyImageView.VIEW_NAME)
 public class MyImageView extends MVerticalLayout implements View {
     public static final String VIEW_NAME = "image";
-    private UploadField upload = new UploadField() {
+    private static final Logger LOG = LoggerFactory.getLogger(MyImageView.class);
+    @Autowired
+    private ImageRepository imageRepository;
+    private final UploadField upload = new UploadField() {
         @Override
         protected void updateDisplay() {
-            final byte[] fileData = (byte[]) getValue();
+            byte[] fileData = (byte[]) getValue();
             String mimeType = getLastMimeType();
             String fileName = getLastFileName();
             if (mimeType.equals("image/png") || mimeType.equals("image/jpg")
@@ -41,8 +48,14 @@ public class MyImageView extends MVerticalLayout implements View {
                         return mimeType;
                     }
                 };
-                Embedded embedded = new Embedded("Image:"+fileName+"("+getLastFileSize()+") bytes", resource);
+                Embedded embedded = new Embedded("Image:" + fileName + "(" + getLastFileSize() + ") bytes", resource);
                 addComponent(embedded);
+                Image image = new Image();
+                image.setName(fileName);
+                image.setData(fileData);
+                image = imageRepository.save(image);
+                MyImageView.LOG.info("Saving {} to DB", fileName);
+                Notification.show("Image saved.");
                 embedded.addClickListener(event -> removeComponent(embedded));
                 embedded.setAlternateText("Remove");
             } else {
@@ -53,7 +66,7 @@ public class MyImageView extends MVerticalLayout implements View {
 
     @PostConstruct
     public void init() {
-        final File tmpDir = Files.createTempDir();
+        File tmpDir = Files.createTempDir();
         upload.setFieldType(UploadField.FieldType.BYTE_ARRAY);
         upload.setDisplayUpload(true);
         upload.setAcceptFilter("image/*");
@@ -71,5 +84,13 @@ public class MyImageView extends MVerticalLayout implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
 
+    }
+
+    public ImageRepository getImageRepository() {
+        return this.imageRepository;
+    }
+
+    public void setImageRepository(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
     }
 }

@@ -3,7 +3,6 @@ package demo.web.views;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Label;
 import org.vaadin.viritin.label.RichText;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
@@ -22,6 +21,7 @@ public class DefaultView extends MVerticalLayout implements View {
                 new RichText().withMarkDownResource("/static/main.md")
         );
     }
+
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
 

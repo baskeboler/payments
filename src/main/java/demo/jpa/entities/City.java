@@ -19,16 +19,29 @@ public class City {
     @ManyToOne(optional = false)
     private Country country;
 
-    public Country getCountry() {
-        return this.country;
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ this.getId() >>> 32);
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getCountry().hashCode();
+        return result;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        if (getId() != city.getId()) return false;
+        if (!getName().equals(city.getName())) return false;
+        return this.getCountry().equals(city.getCountry());
+
     }
 
     public long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(long id) {
@@ -36,31 +49,18 @@ public class City {
     }
 
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-
-        City city = (City) o;
-
-        if (this.getId() != city.getId()) return false;
-        if (!this.getName().equals(city.getName())) return false;
-        return getCountry().equals(city.getCountry());
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (this.getId() ^ getId() >>> 32);
-        result = 31 * result + this.getName().hashCode();
-        result = 31 * result + this.getCountry().hashCode();
-        return result;
     }
 }

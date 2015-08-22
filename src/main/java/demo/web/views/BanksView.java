@@ -1,7 +1,7 @@
 package demo.web.views;
 
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
@@ -10,13 +10,11 @@ import demo.jpa.repositories.BankRepository;
 import demo.web.forms.BankForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.vaadin.viritin.LazyList;
+import org.springframework.data.domain.Sort.Direction;
 import org.vaadin.viritin.SortableLazyList;
 import org.vaadin.viritin.button.ConfirmButton;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.fields.MTable;
-import org.vaadin.viritin.fields.MValueChangeEvent;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
@@ -27,33 +25,31 @@ import javax.annotation.PostConstruct;
  */
 @SpringView(name = BanksView.VIEW_NAME)
 public class BanksView extends MVerticalLayout implements View {
-    @Autowired
-    private BankRepository bankRepository;
     public static final String VIEW_NAME = "banks";
-
     private static final int PAGE_SIZE = 50;
-
     private final MTable<Bank> banksList = new MTable<>(Bank.class)
             .withProperties("id", "name", "address")
             .withColumnHeaders("Id", "Name", "Address")
             .withFullWidth();
-    private final Button newBank = new MButton(FontAwesome.PLUS, event -> showCreateBankDialog());
+    @Autowired
+    private BankRepository bankRepository;
+    private final Button newBank = new MButton(FontAwesome.PLUS, event -> this.showCreateBankDialog());
     private final Button editBank = new MButton(FontAwesome.EDIT, event -> {
-        edit(banksList.getValue());
+        this.edit(this.banksList.getValue());
     });
 
     private final Button deleteBank = new ConfirmButton(FontAwesome.MINUS,
             "Are you sure you want to delete this bank?",
             event -> {
-                bankRepository.delete(banksList.getValue());
-                banksList.setValue(null);
-                loadList();
+                this.bankRepository.delete(this.banksList.getValue());
+                this.banksList.setValue(null);
+                this.loadList();
             }
     );
 
     private void showCreateBankDialog() {
         Bank b = new Bank();
-        edit(b);
+        this.edit(b);
     }
 
     private void edit(Bank b) {
@@ -64,42 +60,49 @@ public class BanksView extends MVerticalLayout implements View {
     }
 
     private void resetBank(Bank bank) {
-        closeWindow();
-    }
-
-    private void saveBank(Bank bank) {
-        bankRepository.save(bank);
-        closeWindow();
-        loadList();
+        this.closeWindow();
     }
 
     private void closeWindow() {
-        getUI().getWindows().stream().forEach(w -> getUI().removeWindow(w));
+        this.getUI().getWindows().stream().forEach(w -> this.getUI().removeWindow(w));
     }
 
+    private void saveBank(Bank bank) {
+        this.bankRepository.save(bank);
+        this.closeWindow();
+        this.loadList();
+    }
+
+    @SuppressWarnings("unchecked")
     public void loadList() {
-        banksList.setBeans(new SortableLazyList<>(
-                (firstRow, sortAscending, property) -> bankRepository.findAllBy(
+        this.banksList.setBeans(new SortableLazyList<>(
+                (firstRow, sortAscending, property) -> this.bankRepository.findAllBy(
                         new PageRequest(
-                                firstRow / PAGE_SIZE,
-                                PAGE_SIZE,
-                                sortAscending ? Sort.Direction.ASC : Sort.Direction.DESC,
+                                firstRow / BanksView.PAGE_SIZE,
+                                BanksView.PAGE_SIZE,
+                                sortAscending ? Direction.ASC : Direction.DESC,
                                 property == null ? "id" : property
                         )
                 ),
-                () -> (int) bankRepository.count(),
-                PAGE_SIZE
+                () -> (int) this.bankRepository.count(),
+                BanksView.PAGE_SIZE
         ));
-        adjustButtonState();
+        this.adjustButtonState();
+    }
+
+    private void adjustButtonState() {
+        boolean hasSelection = this.banksList.getValue() != null;
+        this.editBank.setEnabled(hasSelection);
+        this.deleteBank.setEnabled(hasSelection);
     }
 
     @Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
+    public void enter(ViewChangeEvent event) {
 
     }
 
     public BankRepository getBankRepository() {
-        return bankRepository;
+        return this.bankRepository;
     }
 
     public void setBankRepository(BankRepository bankRepository) {
@@ -108,18 +111,12 @@ public class BanksView extends MVerticalLayout implements View {
 
     @PostConstruct
     public void init() {
-        addComponents(
-                new MHorizontalLayout(newBank, editBank, deleteBank),
-                banksList
+        this.addComponents(
+                new MHorizontalLayout(this.newBank, this.editBank, this.deleteBank),
+                this.banksList
         );
-        banksList.addMValueChangeListener(event -> adjustButtonState());
-        banksList.setSelectable(true);
-        loadList();
-    }
-
-    private void adjustButtonState() {
-        boolean hasSelection = banksList.getValue() != null;
-        editBank.setEnabled(hasSelection);
-        deleteBank.setEnabled(hasSelection);
+        this.banksList.addMValueChangeListener(event -> this.adjustButtonState());
+        this.banksList.setSelectable(true);
+        this.loadList();
     }
 }

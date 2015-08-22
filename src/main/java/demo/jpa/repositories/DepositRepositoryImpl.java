@@ -13,21 +13,21 @@ import java.math.BigDecimal;
  * Created by victor on 8/12/15.
  */
 public class DepositRepositoryImpl extends CustomRepoImplementation<DepositTransaction>
-        implements DepositRepositoryCustom{
+        implements DepositRepositoryCustom {
 
     private static final Logger LOG = LoggerFactory.getLogger(DepositRepositoryImpl.class);
 
     @Transactional
     @Override
     public DepositTransaction processDeposit(DepositTransaction d) {
-        LOG.info("processing deposit");
+        DepositRepositoryImpl.LOG.info("processing deposit");
         Account account = d.getAccount();
         BigDecimal accountBalance = account.getAccountBalance();
         account.setAccountBalance(accountBalance.add(d.getAmount()));
         d.setProcessed(true);
         d.setState(TransactionState.OK);
-        getEm().merge(account);
-        return this.save(d);
+        this.getEm().merge(account);
+        return save(d);
     }
 
 }

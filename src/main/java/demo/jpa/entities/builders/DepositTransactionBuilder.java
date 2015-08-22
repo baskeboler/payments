@@ -20,27 +20,18 @@ public class DepositTransactionBuilder {
     private DepositTransactionBuilder() {
     }
 
-    public static DepositTransactionBuilder aDepositTransaction() {
-        return new DepositTransactionBuilder();
+    public DepositTransactionBuilder but() {
+        return DepositTransactionBuilder.aDepositTransaction()
+                .withTimestamp(this.timestamp)
+                .withAmount(this.amount)
+                .withComment(this.comment)
+                .withId(this.id)
+                .withAccount(this.account)
+                .withProcessed(this.processed);
     }
 
-    public DepositTransactionBuilder withAmount(BigDecimal amount) {
-        this.amount = amount;
-        return this;
-    }
-
-    public DepositTransactionBuilder withTimestamp(Timestamp instant) {
-        this.timestamp = instant;
-        return this;
-    }
-
-    public DepositTransactionBuilder withComment(String comment) {
-        this.comment = comment;
-        return this;
-    }
-
-    public DepositTransactionBuilder withId(long id) {
-        this.id = id;
+    public DepositTransactionBuilder withProcessed(boolean processed) {
+        this.processed = processed;
         return this;
     }
 
@@ -49,29 +40,38 @@ public class DepositTransactionBuilder {
         return this;
     }
 
-    public DepositTransactionBuilder withProcessed(boolean processed) {
-        this.processed = processed;
+    public DepositTransactionBuilder withId(long id) {
+        this.id = id;
         return this;
     }
 
-    public DepositTransactionBuilder but() {
-        return aDepositTransaction()
-                .withTimestamp(timestamp)
-                .withAmount(amount)
-                .withComment(comment)
-                .withId(id)
-                .withAccount(account)
-                .withProcessed(processed);
+    public DepositTransactionBuilder withComment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public DepositTransactionBuilder withAmount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public DepositTransactionBuilder withTimestamp(Timestamp instant) {
+        timestamp = instant;
+        return this;
+    }
+
+    public static DepositTransactionBuilder aDepositTransaction() {
+        return new DepositTransactionBuilder();
     }
 
     public DepositTransaction build() {
         DepositTransaction depositTransaction = new DepositTransaction();
-        depositTransaction.setAmount(amount);
-        depositTransaction.setComment(comment);
-        depositTransaction.setId(id);
-        depositTransaction.setAccount(account);
-        depositTransaction.setProcessed(processed);
-        depositTransaction.setTimestamp(timestamp);
+        depositTransaction.setAmount(this.amount);
+        depositTransaction.setComment(this.comment);
+        depositTransaction.setId(this.id);
+        depositTransaction.setAccount(this.account);
+        depositTransaction.setProcessed(this.processed);
+        depositTransaction.setTimestamp(this.timestamp);
         return depositTransaction;
     }
 }

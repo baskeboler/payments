@@ -13,10 +13,13 @@ import java.util.List;
  */
 public interface TransactionService {
     List<Transaction> findByAccount(Account a);
+
     List<Transaction> findByAccount(Account a, Pageable pageable);
 
     Transaction saveTransaction(Transaction txn);
+
     DepositTransaction saveDeposit(DepositTransaction deposit);
+
     WithdrawalTransaction saveWithdrawal(WithdrawalTransaction withdrawal);
 
     void delete(Transaction txn);

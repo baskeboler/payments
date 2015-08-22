@@ -11,7 +11,8 @@ import java.util.List;
  * Created by victor on 8/18/15.
  */
 @Transactional(readOnly = true)
-public interface BankRepository extends JpaRepository<Bank, Long>{
+public interface BankRepository extends JpaRepository<Bank, Long> {
     List<Bank> findByName(String name);
+
     List<Bank> findAllBy(Pageable pageable);
 }

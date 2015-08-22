@@ -20,20 +20,18 @@ public abstract class CustomRepoImplementation<T extends Transaction> {
     @PersistenceContext
     private EntityManager em;
 
-    private Class<T> genericType;
-
     private JpaEntityInformation<T, ?> entityInformation;
 
     @PostConstruct
     public void postConstruct() {
-        LOG.info("Running post-construct.");
-        genericType = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), CustomRepoImplementation.class);
-        entityInformation = JpaEntityInformationSupport.getMetadata(genericType, em);
-        LOG.info("Building repository for {}", genericType.getSimpleName());
+        CustomRepoImplementation.LOG.info("Running post-construct.");
+        @SuppressWarnings("unchecked") Class<T> genericType = (Class<T>) GenericTypeResolver.resolveTypeArgument(this.getClass(), CustomRepoImplementation.class);
+        this.entityInformation = JpaEntityInformationSupport.getMetadata(genericType, this.em);
+        CustomRepoImplementation.LOG.info("Building repository for {}", genericType.getSimpleName());
     }
 
     public EntityManager getEm() {
-        return this.em;
+        return em;
     }
 
     public void setEm(EntityManager em) {
@@ -41,7 +39,7 @@ public abstract class CustomRepoImplementation<T extends Transaction> {
     }
 
     public JpaEntityInformation<T, ?> getEntityInformation() {
-        return this.entityInformation;
+        return entityInformation;
     }
 
     public void setEntityInformation(JpaEntityInformation<T, ?> entityInformation) {
@@ -49,11 +47,11 @@ public abstract class CustomRepoImplementation<T extends Transaction> {
     }
 
     protected T save(T txn) {
-        if (entityInformation.isNew(txn)) {
-            em.persist(txn);
+        if (this.entityInformation.isNew(txn)) {
+            this.em.persist(txn);
             return txn;
         } else {
-            return em.merge(txn);
+            return this.em.merge(txn);
         }
     }
 }

@@ -22,40 +22,41 @@ public abstract class Transaction {
 
     @Enumerated
     private TransactionState state = TransactionState.PENDING;
+    private boolean processed;
 
     public Timestamp getTimestamp() {
-        return this.timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
-
-    public Account getAccount() {
-        return this.account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    private boolean processed = false;
-
     public boolean isProcessed() {
-        return this.processed;
+        return processed;
     }
 
     public void setProcessed(boolean processed) {
         this.processed = processed;
     }
 
-    public long getId() {
-        return this.id;
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ getId() >>> 32);
+        result = 31 * result + getAccount().hashCode();
+        return result;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Transaction that = (Transaction) o;
+
+        if (getId() != that.getId()) return false;
+        return getAccount().equals(that.getAccount());
+
     }
 
     @Override
@@ -63,27 +64,24 @@ public abstract class Transaction {
         return new ReflectionToStringBuilder(this).build();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-
-        Transaction that = (Transaction) o;
-
-        if (this.getId() != that.getId()) return false;
-        return this.getAccount().equals(that.getAccount());
-
+    public long getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (this.getId() ^ this.getId() >>> 32);
-        result = 31 * result + this.getAccount().hashCode();
-        return result;
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public TransactionState getState() {
-        return state;
+        return this.state;
     }
 
     public void setState(TransactionState state) {

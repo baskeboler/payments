@@ -15,8 +15,27 @@ public class Country {
 
     private String name;
 
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ getId() >>> 32);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Country country = (Country) o;
+
+        if (getId() != country.getId()) return false;
+        return !(this.getName() != null ? !this.getName().equals(country.getName()) : country.getName() != null);
+
+    }
+
     public long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(long id) {
@@ -24,29 +43,10 @@ public class Country {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-
-        Country country = (Country) o;
-
-        if (this.getId() != country.getId()) return false;
-        return !(getName() != null ? !getName().equals(country.getName()) : country.getName() != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (this.getId() ^ this.getId() >>> 32);
-        result = 31 * result + (this.getName() != null ? this.getName().hashCode() : 0);
-        return result;
     }
 }

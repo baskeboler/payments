@@ -11,22 +11,17 @@ public class AccountBuilder {
     private long id;
     private String name;
     private String address;
-    private BigDecimal accountBalance=BigDecimal.ZERO ;
+    private BigDecimal accountBalance = BigDecimal.ZERO;
 
     private AccountBuilder() {
     }
 
-    public static AccountBuilder anAccount() {
-        return new AccountBuilder();
+    public AccountBuilder but() {
+        return AccountBuilder.anAccount().withId(this.id).withName(this.name).withAddress(this.address).withAccountBalance(this.accountBalance);
     }
 
-    public AccountBuilder withId(long id) {
-        this.id = id;
-        return this;
-    }
-
-    public AccountBuilder withName(String name) {
-        this.name = name;
+    public AccountBuilder withAccountBalance(BigDecimal accountBalance) {
+        this.accountBalance = accountBalance;
         return this;
     }
 
@@ -35,21 +30,26 @@ public class AccountBuilder {
         return this;
     }
 
-    public AccountBuilder withAccountBalance(BigDecimal accountBalance) {
-        this.accountBalance = accountBalance;
+    public AccountBuilder withName(String name) {
+        this.name = name;
         return this;
     }
 
-    public AccountBuilder but() {
-        return anAccount().withId(id).withName(name).withAddress(address).withAccountBalance(accountBalance);
+    public AccountBuilder withId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    public static AccountBuilder anAccount() {
+        return new AccountBuilder();
     }
 
     public Account build() {
         Account account = new Account();
-        account.setId(id);
-        account.setName(name);
-        account.setAddress(address);
-        account.setAccountBalance(accountBalance);
+        account.setId(this.id);
+        account.setName(this.name);
+        account.setAddress(this.address);
+        account.setAccountBalance(this.accountBalance);
         return account;
     }
 }

@@ -13,6 +13,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByName(String name);
+
     List<Account> findByNameLike(String name);
+
     List<Account> findAllBy(Pageable pageable);
 }

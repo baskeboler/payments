@@ -10,12 +10,18 @@ import java.util.List;
  */
 public interface AccountService {
     Account createAccount(String name, String Address);
+
     Account saveAccount(Account account);
+
     Account find(long id);
 
     List<Account> findByName(String name);
+
     List<Account> getPage(Pageable pageable);
+
     void deleteAccount(long id);
+
     void deleteAccount(Account a);
+
     int count();
 }

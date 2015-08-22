@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import reactor.Environment;
 import reactor.bus.EventBus;
 import reactor.spring.context.config.EnableReactor;
@@ -21,27 +20,26 @@ public class ReactorConfig {
     @Autowired
     private Environment environment;
 
-    public Environment getEnvironment() {
-        LOG.info("Retornando env.");
-        return this.environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        LOG.info("Seteand env.");
-        this.environment = environment;
-    }
-
     //public EventBus eventBus;
     @Bean
     public EventBus eventBus() {
-        LOG.info("Creating Event Bus.");
-        EventBus bus = EventBus.create(getEnvironment());
-        return bus;
+        ReactorConfig.LOG.info("Creating Event Bus.");
+        return EventBus.create(this.getEnvironment());
+    }
+
+    public Environment getEnvironment() {
+        ReactorConfig.LOG.info("Retornando env.");
+        return environment;
+    }
+
+    public void setEnvironment(Environment environment) {
+        ReactorConfig.LOG.info("Seteand env.");
+        this.environment = environment;
     }
 
     @Bean
     public Environment getEnv() {
-        LOG.info("Creando env.");
+        ReactorConfig.LOG.info("Creando env.");
         return Environment.initializeIfEmpty();
     }
 }

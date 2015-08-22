@@ -16,16 +16,34 @@ public class Bank {
     private String name;
     private String address;
 
-    public String getAddress() {
-        return this.address;
+    @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ getId() >>> 32);
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
+        return result;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Bank bank = (Bank) o;
+
+        if (getId() != bank.getId()) return false;
+        if (getName() != null ? !getName().equals(bank.getName()) : bank.getName() != null) return false;
+        return !(getAddress() != null ? !getAddress().equals(bank.getAddress()) : bank.getAddress() != null);
+
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s-%s", this.id, this.name);
     }
 
     public long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(long id) {
@@ -33,36 +51,18 @@ public class Bank {
     }
 
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s-%s", id, name);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-
-        Bank bank = (Bank) o;
-
-        if (this.getId() != bank.getId()) return false;
-        if (this.getName() != null ? !this.getName().equals(bank.getName()) : bank.getName() != null) return false;
-        return !(this.getAddress() != null ? !this.getAddress().equals(bank.getAddress()) : bank.getAddress() != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (this.getId() ^ this.getId() >>> 32);
-        result = 31 * result + (this.getName() != null ? this.getName().hashCode() : 0);
-        result = 31 * result + (this.getAddress() != null ? this.getAddress().hashCode() : 0);
-        return result;
     }
 }

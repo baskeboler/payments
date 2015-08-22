@@ -12,8 +12,8 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
  * Created by victor on 8/18/15.
  */
 public class BankForm extends AbstractForm<Bank> {
-    private TextField name = new MTextField("Name");
-    private TextField address = new MTextField("Address");
+    private final TextField name = new MTextField("Name");
+    private final TextField address = new MTextField("Address");
 
     public BankForm(Bank bank) {
         setSizeUndefined();

@@ -7,6 +7,7 @@ import demo.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository repo;
 
     public AccountRepository getRepo() {
-        return repo;
+        return this.repo;
     }
 
     public void setRepo(AccountRepository repo) {
@@ -27,7 +28,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount(String name, String address) {
-        return repo.save(
+        return this.repo.save(
                 AccountBuilder.anAccount()
                         .withName(name)
                         .withAddress(address)
@@ -38,38 +39,36 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account saveAccount(Account account) {
-        return repo.save(account);
+        return this.repo.save(account);
     }
 
     @Override
     public Account find(long id) {
-        Account ret = repo.findOne(id);
-        return ret;
+        return this.repo.findOne(id);
     }
 
     @Override
     public List<Account> findByName(String name) {
-        List<Account> a = repo.findByNameLike(name);
-        return a;
+        return this.repo.findByNameLike(name);
     }
 
     @Override
     public List<Account> getPage(Pageable pageable) {
-        return repo.findAllBy(pageable);
+        return this.repo.findAllBy(pageable);
     }
 
     @Override
     public void deleteAccount(long id) {
-        repo.delete(id);
+        this.repo.delete(id);
     }
 
     @Override
     public void deleteAccount(Account a) {
-        repo.delete(a);
+        this.repo.delete(a);
     }
 
     @Override
     public int count() {
-        return (int)repo.count();
+        return (int) this.repo.count();
     }
 }

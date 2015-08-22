@@ -15,23 +15,16 @@ public class WithdrawalTransactionBuilder {
     private Timestamp timestamp;
     private boolean processed;
     private BigDecimal amount;
+
     private WithdrawalTransactionBuilder() {
     }
 
-    public static WithdrawalTransactionBuilder aWithdrawalTransaction() {
-        return new WithdrawalTransactionBuilder();
+    public WithdrawalTransactionBuilder but() {
+        return WithdrawalTransactionBuilder.aWithdrawalTransaction().withAmount(this.amount).withId(this.id).withAccount(this.account).withTimestamp(this.timestamp).withProcessed(this.processed);
     }
 
-    public WithdrawalTransactionBuilder withId(long id) {
-        this.id = id;
-        return this;
-    }
-    public WithdrawalTransactionBuilder withAmount(BigDecimal amount) {
-        this.amount = amount;
-        return this;
-    }
-    public WithdrawalTransactionBuilder withAccount(Account account) {
-        this.account = account;
+    public WithdrawalTransactionBuilder withProcessed(boolean processed) {
+        this.processed = processed;
         return this;
     }
 
@@ -40,22 +33,32 @@ public class WithdrawalTransactionBuilder {
         return this;
     }
 
-    public WithdrawalTransactionBuilder withProcessed(boolean processed) {
-        this.processed = processed;
+    public WithdrawalTransactionBuilder withAccount(Account account) {
+        this.account = account;
         return this;
     }
 
-    public WithdrawalTransactionBuilder but() {
-        return aWithdrawalTransaction().withAmount(amount).withId(id).withAccount(account).withTimestamp(timestamp).withProcessed(processed);
+    public WithdrawalTransactionBuilder withId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    public WithdrawalTransactionBuilder withAmount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public static WithdrawalTransactionBuilder aWithdrawalTransaction() {
+        return new WithdrawalTransactionBuilder();
     }
 
     public WithdrawalTransaction build() {
         WithdrawalTransaction withdrawalTransaction = new WithdrawalTransaction();
-        withdrawalTransaction.setId(id);
-        withdrawalTransaction.setAccount(account);
-        withdrawalTransaction.setTimestamp(timestamp);
-        withdrawalTransaction.setProcessed(processed);
-        withdrawalTransaction.setAmount(amount);
+        withdrawalTransaction.setId(this.id);
+        withdrawalTransaction.setAccount(this.account);
+        withdrawalTransaction.setTimestamp(this.timestamp);
+        withdrawalTransaction.setProcessed(this.processed);
+        withdrawalTransaction.setAmount(this.amount);
         return withdrawalTransaction;
     }
 }

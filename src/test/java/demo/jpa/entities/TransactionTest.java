@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 @SpringApplicationConfiguration(classes = BankingApplication.class)
 public class TransactionTest {
 
-    private static Logger LOG = LoggerFactory.getLogger(TransactionTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionTest.class);
     @Autowired
     private AccountRepository accounts;
 
@@ -42,105 +42,104 @@ public class TransactionTest {
 
     @Autowired
     private WithdrawalRepository withdrawals;
-
-    public WithdrawalRepository getWithdrawals() {
-        return withdrawals;
-    }
-
-    public void setWithdrawals(WithdrawalRepository withdrawals) {
-        this.withdrawals = withdrawals;
-    }
-
     @Autowired
     private TransactionRepository txns;
 
-    public DepositRepository getDeposits() {
-        return deposits;
-    }
-
-    public void setDeposits(DepositRepository deposits) {
-        this.deposits = deposits;
-    }
-
-    public AccountRepository getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(AccountRepository accounts) {
-        this.accounts = accounts;
-    }
-
-    public void setTxns(TransactionRepository txns) {
-        this.txns = txns;
-    }
-
-    public TransactionRepository getTxns() {
-        return txns;
-    }
-
     @Before
     public void setUp() throws Exception {
-        Account a1 = getAccounts().save(
+        Account a1 = this.getAccounts().save(
                 AccountBuilder.anAccount()
                         .withName("Victor Gil")
                         .withAddress("8 de Octubre 2323")
                         .build()
         );
-        Account a2 = getAccounts().save(
+        Account a2 = this.getAccounts().save(
                 AccountBuilder.anAccount()
                         .withName("Ramon Rodriguez")
                         .withAddress("18 de Julio 666")
                         .build()
         );
 
-        getDeposits().save(
+        this.getDeposits().save(
                 DepositTransactionBuilder.aDepositTransaction()
                         .withAmount(BigDecimal.valueOf(1000))
                         .withAccount(a1)
                         .withComment("My Deposit")
                         .withTimestamp(Timestamp.from(Instant.now())).build()
         );
-        getDeposits().save(
+        this.getDeposits().save(
                 DepositTransactionBuilder.aDepositTransaction()
                         .withAmount(BigDecimal.valueOf(1500))
                         .withAccount(a1)
                         .withComment("My Deposit2")
                         .withTimestamp(Timestamp.from(Instant.now())).build()
         );
-        getDeposits().save(
+        this.getDeposits().save(
                 DepositTransactionBuilder.aDepositTransaction()
                         .withAmount(BigDecimal.valueOf(750))
                         .withAccount(a2)
                         .withComment("My Deposit3")
                         .withTimestamp(Timestamp.from(Instant.now())).build()
         );
-        getWithdrawals().save(
+        this.getWithdrawals().save(
                 WithdrawalTransactionBuilder.aWithdrawalTransaction()
                         .withAccount(a1).withAmount(BigDecimal.valueOf(200))
                         .withTimestamp(Timestamp.from(Instant.now())).build()
         );
     }
 
+    public AccountRepository getAccounts() {
+        return this.accounts;
+    }
+
+    public DepositRepository getDeposits() {
+        return this.deposits;
+    }
+
+    public WithdrawalRepository getWithdrawals() {
+        return this.withdrawals;
+    }
+
+    public void setWithdrawals(WithdrawalRepository withdrawals) {
+        this.withdrawals = withdrawals;
+    }
+
+    public void setDeposits(DepositRepository deposits) {
+        this.deposits = deposits;
+    }
+
+    public void setAccounts(AccountRepository accounts) {
+        this.accounts = accounts;
+    }
+
     @After
     public void tearDown() throws Exception {
-        getDeposits().deleteAll();
-        getWithdrawals().deleteAll();
-        getAccounts().deleteAll();
+        this.getDeposits().deleteAll();
+        this.getWithdrawals().deleteAll();
+        this.getAccounts().deleteAll();
         //getTxns().deleteAll();
         //getAccountService().deleteAll();
     }
 
     @Test
     public void testFindTransactions() {
-        List<Transaction> ts = getTxns().findAll();
-        LOG.info("Printing txns.");
-        ts.forEach(t -> LOG.info(t.toString()));
+        List<Transaction> ts = this.getTxns().findAll();
+        TransactionTest.LOG.info("Printing txns.");
+        ts.forEach(t -> TransactionTest.LOG.info(t.toString()));
         assertFalse(ts.isEmpty());
+    }
+
+    public TransactionRepository getTxns() {
+        return this.txns;
+    }
+
+    public void setTxns(TransactionRepository txns) {
+        this.txns = txns;
     }
 
     @Test
     public void testFindWithdrawals() {
-        List<WithdrawalTransaction> list = getWithdrawals().findAll();
+        List<WithdrawalTransaction> list = this.getWithdrawals().findAll();
         assertTrue("size hould be 1.", list.size() == 1);
     }
 }

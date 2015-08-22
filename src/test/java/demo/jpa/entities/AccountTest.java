@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by victor on 8/5/15.
@@ -27,18 +27,18 @@ public class AccountTest {
 
     @Before
     public void setup() {
-        repo.deleteAll();
-        repo.save(AccountBuilder.anAccount().withName("Victor Gil").withAddress("8 de Octubre 2323").build());
+        this.repo.deleteAll();
+        this.repo.save(AccountBuilder.anAccount().withName("Victor Gil").withAddress("8 de Octubre 2323").build());
     }
 
     @Test
     public void testFind() {
-        List<Account> a = getRepo().findByName("Victor Gil");
+        List<Account> a = this.getRepo().findByName("Victor Gil");
         assertTrue("La cuenta recien creada debe existir", a.size() == 1);
     }
 
     public AccountRepository getRepo() {
-        return repo;
+        return this.repo;
     }
 
     public void setRepo(AccountRepository repo) {
